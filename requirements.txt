@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+langchain
+langchain_community
+langchain_openai
+langchain-anthropic
+langchain_aws
+langgraph
+openai
+tiktoken
+requests
