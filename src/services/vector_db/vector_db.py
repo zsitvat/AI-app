@@ -1,9 +1,9 @@
 from langchain_community.vectorstores import DeepLake
-from langchain.chat_models import init_chat_model
+
 
 from schemas.model_schema import ModelSchema
 from services.file_loader.file_loader import FileLoaderAndsplitter
-
+from utils.model_selector import get_model
 
 class VectorDb:
     """VectorDb class to create a vector database"""
@@ -17,6 +17,7 @@ class VectorDb:
         documents: list,
         model: ModelSchema,
         encoding: str,
+        sheet_name: str
     ) -> str:
         """Create a vector database using deeplake
         Args:
@@ -29,28 +30,35 @@ class VectorDb:
             str: Success message
         """
 
-        embeddings = init_chat_model(
-            model_name=model.model_name,
-            model_type=model.model_type,
+        embeddings = get_model(
             provider=model.provider,
+            deployment=model.deployment,
+            model=model.model_name,
+            type=model.model_type,
             temperature=model.temperature,
         )
 
         try:
 
-            docs = FileLoaderAndsplitter.load_and_split_file(
-                file_path=documents,
-                text_splitting_name="recursive",
-                chunk_size=chunk_size,
-                chunk_overlap=chunk_overlap,
-                encoding=encoding,
-            )
+            docs_for_vector_db = []
 
-            vectorstore = DeepLake.from_documents(
-                docs,
-                embeddings,
-                dataset_path=db_path,
+            for doc in documents:
+                docs_for_vector_db.extend(
+                    FileLoaderAndsplitter().load_and_split_file(
+                        file_path=doc,
+                        text_splitting_name="recursive",
+                        chunk_size=chunk_size,
+                        chunk_overlap=chunk_overlap,
+                        encoding=encoding,
+                        sheet_name=sheet_name
+                    )
+                )
+
+            DeepLake.from_documents(
+                documents=docs_for_vector_db,
+                embedding=embeddings,
                 overwrite=overwrite,
+                dataset_path=db_path,
             )
 
         except Exception as ex:

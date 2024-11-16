@@ -19,7 +19,7 @@ def rag(request_data: RequestPostSchema):
             return answer_service.create_response(request_data.userInput)
 
         except Exception as ex:
-            logging.error(f"Error in rag route: {str(ex)}")
+            logging.error(f"Error in question_answer route: {str(ex)}")
             return Response(content="Error in rag route", status_code=500, media_type="application/json")
     else:
         return Response(content="No parameters found!", status_code=400, media_type="application/json")

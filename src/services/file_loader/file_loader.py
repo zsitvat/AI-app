@@ -1,7 +1,8 @@
 from langchain_community.document_loaders import (
     TextLoader,
-    UnstructuredPDFLoader,
     UnstructuredExcelLoader,
+    PyPDFLoader,
+    Docx2txtLoader,
 )
 from langchain.text_splitter import (
     CharacterTextSplitter,
@@ -20,26 +21,26 @@ class FileLoaderAndsplitter:
         documents = loader.load()
         return text_splitting.split_documents(documents)
 
-    def _pdf_loader_and_splitting(self, file_path, text_splitting, encoding: str = "utf-8"):
+    def _pdf_loader_and_splitting(self, file_path, text_splitting):
         """Return the splitted documents from the pdf file path."""
 
-        loader = UnstructuredPDFLoader(file_path, encoding=encoding)
+        loader = PyPDFLoader(file_path)
         documents = loader.load()
 
         return text_splitting.split_documents(documents)
 
-    def _docx_loader_and_splitting(self, file_path, text_splitting, encoding: str = "utf-8"):
+    def _docx_loader_and_splitting(self, file_path, text_splitting):
         """Return the splitted documents from the docx file path."""
 
-        loader = TextLoader(file_path, encoding=encoding)
+        loader = Docx2txtLoader(file_path)
         documents = loader.load()
         return text_splitting.split_documents(documents)
 
     def _xlsx_loader_and_splitting(self, file_path, text_splitting, sheet_name=None):
         """Return the splitted documents from the excel file path."""
 
-        if sheet_name == None:
-            loader = UnstructuredExcelLoader(file_path)
+        if sheet_name != None:
+            loader = UnstructuredExcelLoader(file_path, mode="elements")
             documents = loader.load()
 
             return text_splitting.split_documents(documents)
@@ -86,7 +87,7 @@ class FileLoaderAndsplitter:
         Returns:
             list: List of splitted documents"""
 
-        text_splitting_name = self.get_text_splitting(
+        text_splitting_name = self._get_text_splitter(
             text_splitting_name, chunk_size, chunk_overlap
         )
 
@@ -94,12 +95,12 @@ class FileLoaderAndsplitter:
 
             if ".pdf" in file_path:
                 return self._pdf_loader_and_splitting(
-                    file_path, text_splitting_name, encoding=encoding
+                    file_path, text_splitting_name
                 )
 
-            elif "docx" in file_path:
+            elif "docx" in file_path or "doc" in file_path:
                 return self._docx_loader_and_splitting(
-                    file_path, text_splitting_name, encoding=encoding
+                    file_path, text_splitting_name
                 )
 
             elif ".xlsx" in file_path or ".xls" in file_path:

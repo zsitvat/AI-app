@@ -15,11 +15,11 @@ def get_model(
     provider: str,
     deployment: str | None = None,
     model: str | None = 'gtp-3.5-turbo',
-    type: str = "general",
+    type: str = "completions",
     temperature: float = 0
 ) -> (BaseLanguageModel):
 
-    if type == "general":
+    if type == "completions":
         if provider == "openai":
             return OpenAI(model=model, temperature=temperature)
         elif provider == "azure":

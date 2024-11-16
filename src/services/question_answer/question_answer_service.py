@@ -1,4 +1,4 @@
-
+from langchain.chat_models import init_chat_model
 
 class QuestionAnswerService:
     def __init__(self, params):
@@ -7,4 +7,4 @@ class QuestionAnswerService:
 
     def response(self, userInput):
         
-       
+       pass

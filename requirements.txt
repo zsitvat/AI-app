@@ -9,4 +9,10 @@ langgraph
 openai
 tiktoken
 requests
-deeplake
+deeplake==3.9.26
+pypdf
+docx2txt
+unstructured
+networkx
+pandas
+openpyxl
