@@ -9,3 +9,4 @@ langgraph
 openai
 tiktoken
 requests
+deeplake
