@@ -5,7 +5,7 @@ import uvicorn
 from services.logger.logger import LoggerService
 from config import Config
 
-from routes.question_answer_routes import router as question_answer_router
+from routes.answer_routes import router as question_answer_router
 from routes.vector_db_routes import router as vector_db_router
 
 

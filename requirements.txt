@@ -16,3 +16,4 @@ unstructured
 networkx
 pandas
 openpyxl
+google-search-results

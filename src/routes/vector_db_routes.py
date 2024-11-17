@@ -29,7 +29,7 @@ def rag(request: VectorDbPostSchema):
                    
 
         except Exception as ex:
-            logging.error(f"Error in vector_db/create route: {str(ex)}")
-            return Response(content="Error in vector_db/create route", status_code=500, media_type="application/json")
+            logging.getLogger("logger").error(f"Error in vector_db/create route: {str(ex)}")
+            return Response(content=f"Error in vector_db/create route {str(ex)}", status_code=500, media_type="application/json")
     else:
         return Response(content="No parameters found!", status_code=400, media_type="application/json")

@@ -3,6 +3,7 @@ from langchain_community.chat_models import ChatOpenAI
 from langchain_community.chat_models import AzureChatOpenAI
 from langchain_openai import OpenAI, AzureOpenAI, ChatOpenAI, AzureChatOpenAI, OpenAIEmbeddings, AzureOpenAIEmbeddings
 from langchain_core.language_models.base import BaseLanguageModel
+from langchain_core.embeddings import Embeddings
 from langchain_anthropic import ChatAnthropic
 from langchain_aws import ChatBedrock
 
@@ -14,18 +15,19 @@ import boto3
 def get_model(
     provider: str,
     deployment: str | None = None,
-    model: str | None = 'gtp-3.5-turbo',
+    model: str = 'gpt-4o-mini',
     type: str = "completions",
     temperature: float = 0
-) -> (BaseLanguageModel):
+):
 
     if type == "completions":
         if provider == "openai":
+            if model is None:
+                raise ValueError("Model cannot be None")
             return OpenAI(model=model, temperature=temperature)
         elif provider == "azure":
             return AzureOpenAI(
                 azure_endpoint=os.environ.get('AZURE_BASE_URL'),
-                openai_api_version=os.environ.get('AZURE_API_VERSION'),
                 azure_deployment=deployment,
                 temperature=temperature
             )
@@ -35,14 +37,15 @@ def get_model(
         elif provider == "azure":
             return AzureChatOpenAI(
                 azure_endpoint=os.environ.get('AZURE_BASE_URL'),
-                openai_api_version=os.environ.get('AZURE_API_VERSION'),
                 azure_deployment=deployment,
                 temperature=temperature
             )
         elif provider == "anthropic":
             return ChatAnthropic(
-                model=model,
-                temperature=temperature
+                model_name=model,
+                temperature=temperature,
+                timeout=60,
+                stop=None
             )
         elif provider == "bedrock":
             client = boto3.client(
@@ -54,11 +57,11 @@ def get_model(
                 
             return ChatBedrock(
                 client=client,
-                model_id=model,
+                model=model,
                 model_kwargs=dict(temperature=temperature)
             )
         else:
-            logging.getLogger("uvicorn").error("Wrong model provider!")
+            logging.getLogger("logger").error("Wrong model provider!")
             raise KeyError("wrong model provider")
     elif type == "embedding":
         if provider == "openai":
@@ -66,12 +69,11 @@ def get_model(
         elif provider == "azure":
             return AzureOpenAIEmbeddings(
                 azure_endpoint=os.environ.get('AZURE_BASE_URL'),
-                openai_api_version=os.environ.get('AZURE_API_VERSION'),
                 azure_deployment=deployment
             )
         else:
-            logging.getLogger("uvicorn").error("Wrong model provider!")
+            logging.getLogger("logger").error("Wrong model provider!")
             raise KeyError("wrong model provider")
     else:
-        logging.getLogger("uvicorn").error("Wrong model type!")
+        logging.getLogger("logger").error("Wrong model type!")
         raise KeyError("wrong model type")
