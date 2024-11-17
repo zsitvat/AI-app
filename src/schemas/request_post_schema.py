@@ -1,12 +1,11 @@
 from pydantic import BaseModel
 
-from utils.prompt_templates import default_prompt
 from schemas.model_schema import ModelSchema
+from schemas.tool_schema import Tool
 
 
 class RequestPostSchema(BaseModel):
-    prompt: str = default_prompt
+    prompt: str
     userInput: str
     model: ModelSchema
-    vector_db_paths: list = None
-    document_paths: list = None
+    tools_to_use: list[Tool] = None
