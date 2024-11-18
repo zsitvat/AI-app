@@ -1,6 +1,8 @@
 from langchain_core.tools import tool
 from langchain_community.vectorstores.deeplake import DeepLake
 from langchain.embeddings.base import Embeddings
+from langchain_core.runnables.config import RunnableConfig
+
 import logging
 
 from utils.model_selector import get_model
@@ -8,7 +10,7 @@ from schemas.tool_schema import RetriverTool
 
 
 @tool
-def retriver_tool(tool_config: RetriverTool, user_input: str) -> list:
+def retriver_tool(config: RunnableConfig, user_input: str) -> list:
     """
     Web search tool used to search the web for information.
 
@@ -21,14 +23,20 @@ def retriver_tool(tool_config: RetriverTool, user_input: str) -> list:
     """
 
     try:
-
-        model = tool_config.model
+        tool_config: RetriverTool = next(
+            (
+                tool
+                for tool in config.get("configurable", {}).get("tool_config", [])
+                if isinstance(tool, RetriverTool)
+            ),
+            None,
+        )
 
         embedding = get_model(
-            provider=model.provider,
-            deployment=model.deployment,
-            type=model.model_type,
-            model=model.model_name,
+            provider=tool_config.model.provider,
+            deployment=tool_config.model.deployment,
+            type=tool_config.model.model_type,
+            model=tool_config.model.name,
         )
 
         if not isinstance(embedding, Embeddings):
@@ -45,7 +53,9 @@ def retriver_tool(tool_config: RetriverTool, user_input: str) -> list:
             threshold=tool_config.search_kwargs.threshold,
         )
 
-        return retriver.invoke(user_input)
+        docs = retriver.invoke(user_input)
+
+        return [doc.page_content for doc in docs]
 
     except Exception as ex:
         logging.getLogger("logger").error(f"Error in retriver_tool: {ex}")

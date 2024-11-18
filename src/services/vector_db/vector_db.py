@@ -40,7 +40,7 @@ class VectorDb:
         embeddings = get_model(
             provider=model.provider,
             deployment=model.deployment,
-            model=model.model_name,
+            model=model.name,
             type=model.model_type,
             temperature=model.temperature,
         )

@@ -5,6 +5,7 @@ langchain_community
 langchain_openai
 langchain-anthropic
 langchain_aws
+langsmith
 langgraph
 openai
 tiktoken

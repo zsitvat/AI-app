@@ -5,7 +5,7 @@ from schemas.model_schema import ModelSchema
 from schemas.tool_schema import Tool, WebSearchTool, RetriverTool
 
 
-class AnswerRequestPostSchema(BaseModel):
+class AgentRequestPostSchema(BaseModel):
     prompt: str
     user_input: str
     model: ModelSchema

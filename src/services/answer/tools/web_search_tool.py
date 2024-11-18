@@ -1,12 +1,14 @@
 from langchain_core.tools import tool
 from langchain_community.utilities import SerpAPIWrapper
+from langchain_core.runnables.config import RunnableConfig
+
 import logging
 
 from schemas.tool_schema import WebSearchTool
 
 
 @tool
-def web_search_tool(tool_config: WebSearchTool, user_input: str) -> list|str:
+def web_search_tool(config: RunnableConfig, user_input: str) -> list | str:
     """
     Web search tool is used to search the web for information
 
@@ -19,6 +21,14 @@ def web_search_tool(tool_config: WebSearchTool, user_input: str) -> list|str:
     """
 
     try:
+        tool_config: WebSearchTool = next(
+            (
+                tool
+                for tool in config.get("configurable", {}).get("tool_config", [])
+                if isinstance(tool, WebSearchTool)
+            ),
+            None,
+        )
 
         search = SerpAPIWrapper(params={"engine": tool_config.engine})
 
@@ -29,4 +39,3 @@ def web_search_tool(tool_config: WebSearchTool, user_input: str) -> list|str:
     except Exception as ex:
         logging.getLogger("logger").error(f"Error in web_search_tool: {ex}")
         raise ex
-    
