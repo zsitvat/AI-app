@@ -27,6 +27,6 @@ def web_search_tool(tool_config: WebSearchTool, user_input: str) -> list|str:
         return search_results
 
     except Exception as ex:
-        logging.getLogger("logger").error(f"Error in web_search_tool: {e}")
-        raise Exception(f"Error in web_search_tool: {e}")
+        logging.getLogger("logger").error(f"Error in web_search_tool: {ex}")
+        raise ex
     

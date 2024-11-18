@@ -75,4 +75,7 @@ class VectorDb:
             return f"Vector database created successfully on path: {db_path}"
 
         except Exception as ex:
-            raise Exception(f"Error in creating vector database: {str(ex)}")
+            logging.getLogger("logger").error(
+                f"Error in creating vector database: {str(ex)}"
+            )
+            raise ex

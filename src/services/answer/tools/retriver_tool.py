@@ -48,5 +48,5 @@ def retriver_tool(tool_config: RetriverTool, user_input: str) -> list:
         return retriver.invoke(user_input)
 
     except Exception as ex:
-        logging.getLogger("logger").error(f"Error in retriver_tool: {e}")
-        raise Exception(f"Error in retriver_tool: {e}")
+        logging.getLogger("logger").error(f"Error in retriver_tool: {ex}")
+        raise ex

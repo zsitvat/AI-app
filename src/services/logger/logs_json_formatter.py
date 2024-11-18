@@ -1,17 +1,21 @@
 import logging
 import json
 
+
 class JSONFormatter(logging.Formatter):
-    """ Custom JSON Formatter for logging 
-    
-    Args:
-        logging.Formatter: The logging formatter class
-    
-    Returns:
-        JSONFormatter: The JSON formatter object
-    """
+    """JSON Formatter for logging"""
 
     def format(self, record):
+        """
+        Format the log record into JSON
+
+        Args:
+            record (LogRecord): The log record object
+
+        Returns:
+                str: The formatted log record as JSON
+        """
+
         log_data = {
             "timestamp": self.formatTime(record),
             "level": record.levelname,

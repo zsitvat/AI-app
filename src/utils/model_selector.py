@@ -64,7 +64,7 @@ def get_model(
             )
         else:
             logging.getLogger("logger").error("Wrong model provider!")
-            raise KeyError("wrong model provider")
+            raise KeyError("Wrong model provider!")
     elif type == "embedding":
         if provider == "openai":
             return OpenAIEmbeddings(model=model)
@@ -75,7 +75,7 @@ def get_model(
             )
         else:
             logging.getLogger("logger").error("Wrong model provider!")
-            raise KeyError("wrong model provider")
+            raise KeyError("Wrong model provider!")
     else:
         logging.getLogger("logger").error("Wrong model type!")
-        raise KeyError("wrong model type")
+        raise KeyError("Wrong model type!")

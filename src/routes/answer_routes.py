@@ -20,7 +20,7 @@ def question_answer(request_data: AnswerRequestPostSchema):
             tools_config=request_data.tools,
             session_id=request_data.session_id,
         )
-        result = answer_service.run_agent(request_data.user_input)
+        result = answer_service.get_ai_answer(request_data.user_input)
         return JSONResponse(content={"answer": result}, status_code=200)
 
     except Exception as ex:
