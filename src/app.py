@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from dotenv.main import load_dotenv, find_dotenv
 import uvicorn
 
-from services.logger.logger import LoggerService
+from services.logger.logger_service import LoggerService
 from config import Config
 
 from routes.agent_routes import router as question_answer_router

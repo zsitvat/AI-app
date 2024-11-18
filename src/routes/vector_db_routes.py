@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
 import logging
 
-from services.vector_db.vector_db import VectorDb
+from services.vector_db.vector_db_service import VectorDb
 from schemas.vector_db_post_schema import VectorDbPostSchema
 
 router = APIRouter()
