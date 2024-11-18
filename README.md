@@ -1,5 +1,12 @@
 # AI-app
 
+## Használat
+
+  - .env-be be kell állítani a különböző kulcsokat.
+  - run.sh indításával használható az alkalmazás
+  - dockerrel is futtatható:
+      - sudo docker build -t <docker_name>
+
 ## API Végpontok
 
 ### Válasz végpont

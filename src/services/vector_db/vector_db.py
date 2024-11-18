@@ -35,7 +35,7 @@ class VectorDb:
             str: Success message
         """
 
-        logging.getlogger("logger").debug("Creating vector database using deeplake")
+        logging.getLogger("logger").debug("Creating vector database using deeplake")
 
         embeddings = get_model(
             provider=model.provider,
