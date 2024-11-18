@@ -1,6 +1,9 @@
 vector_db
 deeplake_db
 deeplake
+deeplake_databases
+deeplake_databases/
+*deeplake*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

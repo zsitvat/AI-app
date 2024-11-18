@@ -53,7 +53,7 @@ class VectorDb:
                 docs_for_vector_db.extend(
                     FileLoaderAndsplitter().load_and_split_file(
                         file_path=doc,
-                        text_splitting_name="recursive",
+                        text_splitter_name="recursive",
                         chunk_size=chunk_size,
                         chunk_overlap=chunk_overlap,
                         encoding=encoding,

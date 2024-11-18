@@ -1,0 +1,12 @@
+{
+    "configurations": [
+        {
+            "type": "debugpy",
+            "request": "launch",
+            "name": "Launch AI-app",
+            "program": "${workspaceFolder}/src/app.py",
+            "console": "integratedTerminal",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
