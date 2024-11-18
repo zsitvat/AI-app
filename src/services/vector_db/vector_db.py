@@ -67,7 +67,7 @@ class VectorDb:
                 overwrite=overwrite,
                 dataset_path=db_path,
             )
-            
+
             logging.getLogger("logger").info(
                 f"Vector database created successfully at {db_path}."
             )

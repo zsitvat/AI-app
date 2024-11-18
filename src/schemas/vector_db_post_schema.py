@@ -3,6 +3,7 @@ from enum import Enum
 
 from schemas.model_schema import ModelSchema
 
+
 class VectorDbPostSchema(BaseModel):
     db_path: str = "./vector_db"
     db_type: str = "deeplake"
