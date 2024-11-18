@@ -5,6 +5,9 @@ deeplake_databases
 deeplake_databases/
 *deeplake*
 
+.vscode
+.vscode/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
