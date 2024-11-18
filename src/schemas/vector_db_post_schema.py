@@ -6,10 +6,10 @@ from schemas.model_schema import ModelSchema
 class VectorDbPostSchema(BaseModel):
     db_path: str = "./vector_db"
     db_type: str = "deeplake"
+    overwrite: bool = False
+    sheet_name: str | None = None
     file_load_encoding: str = "utf-8"
-    documents: list
     chunk_size: int = 2000
     chunk_overlap: int = 100
-    overwrite: bool = False
+    documents: list[str]
     model: ModelSchema
-    sheet_name: str = None

@@ -1,5 +1,4 @@
 from langchain import hub
-from langchain.agents import create_tool_calling_agent, AgentExecutor
 from langchain_core.language_models.base import BaseLanguageModel
 
 import logging
@@ -8,7 +7,7 @@ from uuid import UUID
 from utils.model_selector import get_model
 from schemas.model_schema import ModelSchema
 from schemas.tool_schema import Tool
-from .tool_config import AVAILABLE_TOOLS
+from .tools_config import AVAILABLE_TOOLS
 
 
 class AnswerService:

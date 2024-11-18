@@ -12,13 +12,16 @@ import os
 
 
 class FileLoaderAndsplitter:
-    """FileLoaderAndsplitter class to load and split the files"""
+    """FileLoaderAndsplitter class to load and split files"""
 
-    def _txt_loader_and_splitting(self, file_path, text_splitting, encoding: str = "utf-8"):
+    def _txt_loader_and_splitting(
+        self, file_path, text_splitting, encoding: str = "utf-8"
+    ):
         """Return the splitted documents from the txt file path."""
 
         loader = TextLoader(file_path, encoding=encoding)
         documents = loader.load()
+
         return text_splitting.split_documents(documents)
 
     def _pdf_loader_and_splitting(self, file_path, text_splitting):
@@ -34,6 +37,7 @@ class FileLoaderAndsplitter:
 
         loader = Docx2txtLoader(file_path)
         documents = loader.load()
+
         return text_splitting.split_documents(documents)
 
     def _xlsx_loader_and_splitting(self, file_path, text_splitting, sheet_name=None):
@@ -93,22 +97,20 @@ class FileLoaderAndsplitter:
 
         if os.path.exists(file_path):
 
-            if ".pdf" in file_path:
-                return self._pdf_loader_and_splitting(
-                    file_path, text_splitting_name
-                )
+            extension = os.path.splitext(file_path)[1]
 
-            elif "docx" in file_path or "doc" in file_path:
-                return self._docx_loader_and_splitting(
-                    file_path, text_splitting_name
-                )
+            if extension == ".pdf":
+                return self._pdf_loader_and_splitting(file_path, text_splitting_name)
 
-            elif ".xlsx" in file_path or ".xls" in file_path:
+            elif extension == ".docx" or extension == ".doc":
+                return self._docx_loader_and_splitting(file_path, text_splitting_name)
+
+            elif extension == "xlsx":
                 return self._xlsx_loader_and_splitting(
                     file_path, text_splitting_name, sheet_name
                 )
 
-            elif ".txt" in file_path:
+            elif extension == ".txt":
                 return self._txt_loader_and_splitting(
                     file_path, text_splitting_name, encoding=encoding
                 )

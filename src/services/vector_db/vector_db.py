@@ -1,9 +1,11 @@
 from langchain_community.vectorstores import DeepLake
+import logging
 
 
 from schemas.model_schema import ModelSchema
 from services.file_loader.file_loader import FileLoaderAndsplitter
 from utils.model_selector import get_model
+
 
 class VectorDb:
     """VectorDb class to create a vector database"""
@@ -17,7 +19,7 @@ class VectorDb:
         documents: list,
         model: ModelSchema,
         encoding: str,
-        sheet_name: str
+        sheet_name: str,
     ) -> str:
         """Create a vector database using deeplake
         Args:
@@ -26,9 +28,14 @@ class VectorDb:
             chunk_overlap (int): Chunk overlap for the vector database
             overwrite (bool): Overwrite the existing vector database
             documents (list): List of documents to create the vector database
+            model (ModelSchema): Model schema
+            encoding (str): Encoding of the txt file
+            sheet_name (str): Sheet name for the excel file
         Returns:
             str: Success message
         """
+
+        logging.getlogger("logger").debug("Creating vector database using deeplake")
 
         embeddings = get_model(
             provider=model.provider,
@@ -50,7 +57,7 @@ class VectorDb:
                         chunk_size=chunk_size,
                         chunk_overlap=chunk_overlap,
                         encoding=encoding,
-                        sheet_name=sheet_name
+                        sheet_name=sheet_name,
                     )
                 )
 
@@ -60,8 +67,12 @@ class VectorDb:
                 overwrite=overwrite,
                 dataset_path=db_path,
             )
+            
+            logging.getLogger("logger").info(
+                f"Vector database created successfully at {db_path}."
+            )
+
+            return f"Vector database created successfully on path: {db_path}"
 
         except Exception as ex:
             raise Exception(f"Error in creating vector database: {str(ex)}")
-
-        return "Vector database created successfully on path: " + db_path
