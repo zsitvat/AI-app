@@ -9,7 +9,7 @@ router = APIRouter()
 
 
 @router.post("/api/vector_db/create")
-def rag(request: VectorDbPostSchema):
+def create_vector_db(request: VectorDbPostSchema):
     """Create a vector database route"""
 
     try:

@@ -1,4 +1,5 @@
 from langchain_community.vectorstores import DeepLake
+from langchain_core.embeddings import Embeddings
 import logging
 
 
@@ -37,13 +38,16 @@ class VectorDb:
 
         logging.getLogger("logger").debug("Creating vector database using deeplake")
 
-        embeddings = get_model(
+        embeddings_model = get_model(
             provider=model.provider,
             deployment=model.deployment,
             model=model.name,
             type=model.model_type,
             temperature=model.temperature,
         )
+
+        if not isinstance(embeddings_model, Embeddings):
+            raise TypeError("The model returned is not of type 'Embeddings'")
 
         try:
 
@@ -63,7 +67,7 @@ class VectorDb:
 
             DeepLake.from_documents(
                 documents=docs_for_vector_db,
-                embedding=embeddings,
+                embedding=embeddings_model,
                 overwrite=overwrite,
                 dataset_path=db_path,
             )

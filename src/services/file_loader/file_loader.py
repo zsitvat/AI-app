@@ -42,7 +42,7 @@ class FileLoaderAndsplitter:
         return text_splitter.split_documents(documents)
 
     def _xlsx_loader_and_splitting(
-        self, file_path: str, text_splitter, sheet_name: str = None
+        self, file_path: str, text_splitter, sheet_name: str | None = None
     ) -> list:
         """Return the splitted documents from the excel file path."""
 
@@ -98,7 +98,7 @@ class FileLoaderAndsplitter:
 
         logging.getLogger("logger").debug(f"Loading and splitting file: {file_path}")
 
-        text_splitter_name = self._get_text_splitter(
+        text_splitter = self._get_text_splitter(
             text_splitter_name, chunk_size, chunk_overlap
         )
 
@@ -107,19 +107,19 @@ class FileLoaderAndsplitter:
             extension = os.path.splitext(file_path)[1]
 
             if extension == ".pdf":
-                return self._pdf_loader_and_splitting(file_path, text_splitter_name)
+                return self._pdf_loader_and_splitting(file_path, text_splitter)
 
             elif extension == ".docx" or extension == ".doc":
-                return self._docx_loader_and_splitting(file_path, text_splitter_name)
+                return self._docx_loader_and_splitting(file_path, text_splitter)
 
             elif extension == "xlsx":
                 return self._xlsx_loader_and_splitting(
-                    file_path, text_splitter_name, sheet_name
+                    file_path, text_splitter, sheet_name
                 )
 
             elif extension == ".txt":
                 return self._txt_loader_and_splitting(
-                    file_path, text_splitter_name, encoding=encoding
+                    file_path, text_splitter, encoding=encoding
                 )
 
             else:

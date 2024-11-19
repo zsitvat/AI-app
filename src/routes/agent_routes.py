@@ -10,7 +10,7 @@ router = APIRouter()
 
 
 @router.post("/api/agent/answer")
-def question_answer(request_data: AgentRequestPostSchema):
+def agent_answer(request_data: AgentRequestPostSchema):
 
     try:
 

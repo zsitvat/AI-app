@@ -6,6 +6,7 @@
   - run.sh indításával használható az alkalmazás
   - dockerrel is futtatható:
       - sudo docker build -t <docker_name>
+  - unit tesztek futtatása - python -m pytest
 
 ## API Végpontok
 
@@ -54,7 +55,6 @@
     {
       "name": "retriver_tool",
       "vector_db_path": "deeplake_databases/deeplake_db_pdf",
-      "required": true,
       "model": {
         "model_name": "text-embedding-3-large",
         "model_type": "embedding",
@@ -119,6 +119,24 @@
 }
 ```
 
+## Környezeti változók
+- `LOG_LEVEL`: Az alkalmazás naplózási szintjét határozza meg. Alapértelmezett érték: "DEBUG".
+- `PORT`: Az alkalmazás futási portszáma..
+- `OPENAI_API_KEY`: Az OpenAI szolgáltatásokhoz való hozzáférés API kulcsa.
+- `AZURE_BASE_URL`: Az Azure szolgáltatások alap URL-je.
+- `AZURE_DEPLOYMENT_NAME`: Az Azure szolgáltatások telepítési neve.
+- `AZURE_OPENAI_API_KEY`: Az Azure OpenAI szolgáltatásokhoz való hozzáférés API kulcsa.
+- `ANTHROPIC_API_KEY`: Az Anthropic szolgáltatásokhoz való hozzáférés API kulcsa.
+- `BEDROCK_AWS_ACCESS_KEY`: Az AWS Bedrock hozzáférési kulcsa.
+- `BEDROCK_AWS_SECRET_KEY`: Az AWS Bedrock titkos kulcsa.
+- `LANGCHAIN_TRACING_V2`: Egy logikai zászló a LangChain nyomkövetés engedélyezéséhez vagy letiltásához.
+- `LANGCHAIN_PROJECT`: A LangChain projekt neve.
+- `LANGCHAIN_ENDPOINT`: A LangChain API végpont URL-je.
+- `LANGCHAIN_API_KEY`: A LangChain szolgáltatásokhoz való hozzáférés API kulcsa.
+- `SERPAPI_API_KEY`: A SerpAPI szolgáltatásokhoz való hozzáférés API kulcsa.
+
+Győződj meg róla, hogy ezeket a környezeti változókat megfelelően beállítottad az alkalmazás futtatása előtt.
+
 
 ## Használt dokumentációk és szolgáltatások:
 - https://python.langchain.com/docs/how_to/migrate_agent/
@@ -126,3 +144,4 @@
 - https://python.langchain.com/docs/integrations/tools/serpapi/
 - https://serpapi.com/manage-api-key
 - https://smith.langchain.com/
+- https://fastapi.tiangolo.com/tutorial/testing/#using-testclient

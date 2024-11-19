@@ -15,7 +15,6 @@ class Tool(BaseModel):
 
 class RetriverTool(Tool):
     vector_db_path: str
-    required: bool = False
     model: ModelSchema
     search_kwargs: SearchKwargs = SearchKwargs(
         k=5, threshold=0.5, search_type="similarity"

@@ -19,3 +19,4 @@ networkx
 pandas
 openpyxl
 google-search-results
+pytest

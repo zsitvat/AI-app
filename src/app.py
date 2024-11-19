@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from dotenv.main import load_dotenv, find_dotenv
 import uvicorn
+import os
 
 from services.logger.logger_service import LoggerService
 from config import Config
@@ -10,7 +11,9 @@ from routes.vector_db_routes import router as vector_db_router
 
 
 def create_app():
+    os.environ.clear()
     load_dotenv(find_dotenv())
+    
     app = FastAPI()
 
     app.include_router(question_answer_router)
