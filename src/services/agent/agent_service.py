@@ -19,10 +19,12 @@ from .in_memory_history import InMemoryHistory
 class AgentService:
     """Service to get answer from the model and tools"""
 
-    def __init__(self, prompt: str, model: ModelSchema, tools_config: list[Tool], user_id:str):
+    def __init__(
+        self, prompt: str, model: ModelSchema, tools_config: list[Tool], user_id: str
+    ):
         self.prompt = prompt
         self.model = model
-        self.user_id  = user_id
+        self.user_id = user_id
         self.tools_config = tools_config
         self.tools = self.get_tools()
 
@@ -116,7 +118,9 @@ class AgentService:
 
         chain = prompt | llm
 
-        chat_history = get_buffer_string(InMemoryHistory().get_messages(user_id = self.user_id))
+        chat_history = get_buffer_string(
+            InMemoryHistory().get_messages(user_id=self.user_id)
+        )
 
         answer = chain.invoke(
             {
