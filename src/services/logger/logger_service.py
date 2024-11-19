@@ -2,14 +2,15 @@ import logging
 import sys
 
 from .logs_json_formatter import JSONFormatter
-    
+
+
 class LoggerService:
 
     def _get_log_level(self, log_level: str = "DEBUG"):
         """Get the log level based on the log level string.
         Args:
             log_level (str): The log level string
-            
+
             Returns:
                 int: The log level integer
         """
@@ -24,12 +25,11 @@ class LoggerService:
         }
         return log_levels.get(log_level.upper(), logging.DEBUG)
 
-
     def setup_logger(self, log_level: str = "DEBUG"):
         """Setup the logger with JSON formatting.
         Args:
             log_level (str): The log level string
-            
+
             Returns:
                 logging.Logger: The logger object
         """

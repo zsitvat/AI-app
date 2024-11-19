@@ -14,7 +14,7 @@ def test_agent_route_responds():
         "user_input": "Milyen az időjárás Győrben?",
         "model": {
             "name": "gpt-4o-mini",
-            "model_type": "chat",
+            "type": "chat",
             "provider": "openai",
             "temperature": 0,
         },
@@ -24,7 +24,6 @@ def test_agent_route_responds():
                 "vector_db_path": "deeplake_databases/deeplake_db_pdf",
                 "model": {
                     "name": "text-embedding-3-large",
-                    "model_type": "embedding",
                     "provider": "openai",
                 },
                 "search_kwargs": {"search_type": "similarity"},

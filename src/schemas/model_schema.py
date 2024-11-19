@@ -17,7 +17,7 @@ class ModelType(str, Enum):
 
 class ModelSchema(BaseModel):
     name: str = "gpt-4o-mini"
-    model_type: ModelType = ModelType.CHAT
+    type: ModelType = ModelType.CHAT
     deployment: str | None = None
     provider: ModelProviderType = ModelProviderType.OPENAI
     temperature: int = 0

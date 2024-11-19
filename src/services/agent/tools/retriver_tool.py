@@ -35,7 +35,7 @@ def retriver_tool(config: RunnableConfig, user_input: str) -> list:
         embedding = get_model(
             provider=tool_config.model.provider,
             deployment=tool_config.model.deployment,
-            type=tool_config.model.model_type,
+            type="embedding",
             model=tool_config.model.name,
         )
 

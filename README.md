@@ -19,7 +19,7 @@
     - `prompt` (string): Az AI modell számára adott prompt a LangSmith hub-ból.
     - `model` (object): Az AI modell konfigurációja.
       - `name` (string): A modell neve.
-      - `model_type` (string): A modell típusa.
+      - `type` (string): A modell típusa.
       - `deployment` (string|null): A modell telepítése.
       - `provider` (string): A szolgáltató neve.
       - `temperature` (number): A válasz generálásának hőmérséklete.
@@ -29,7 +29,7 @@
       - `required` (bool): Az eszköz szükségessége.
       - `model` (object): Az eszköz modell konfigurációja.
         - `model_name` (string): A modell neve.
-        - `model_type` (string): A modell típusa.
+        - `type` (string): A modell típusa.
         - `deployment` (string|null): A modell telepítése.
         - `provider` (string): A szolgáltató neve.
       - `search_kwargs` (object): Keresési paraméterek.
@@ -46,7 +46,7 @@
   "user_input": "Hogy vagy",
   "model": {
     "name": "gpt-4o-mini",
-    "model_type": "chat",
+    "type": "chat",
     "deployment": null,
     "provider": "openai",
     "temperature": 0
@@ -57,7 +57,7 @@
       "vector_db_path": "deeplake_databases/deeplake_db_pdf",
       "model": {
         "model_name": "text-embedding-3-large",
-        "model_type": "embedding",
+        "type": "embedding",
         "deployment": null,
         "provider": "openai"
       },
@@ -113,8 +113,7 @@
   "overwrite": true,
   "model": {
     "model_name": "text-embedding-3-large",
-    "provider": "openai",
-    "model_type":"embedding"
+    "provider": "openai"
   }
 }
 ```

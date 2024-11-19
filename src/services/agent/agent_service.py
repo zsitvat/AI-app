@@ -108,7 +108,7 @@ class AgentService:
             model=self.model.name,
             deployment=self.model.deployment,
             provider=self.model.provider,
-            type=self.model.model_type,
+            type=self.model.type,
             temperature=self.model.temperature,
         )
 

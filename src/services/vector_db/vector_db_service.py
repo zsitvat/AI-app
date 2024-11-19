@@ -42,7 +42,7 @@ class VectorDb:
             provider=model.provider,
             deployment=model.deployment,
             model=model.name,
-            type=model.model_type,
+            type=model.type,
             temperature=model.temperature,
         )
 

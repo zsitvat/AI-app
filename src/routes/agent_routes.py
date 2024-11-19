@@ -18,7 +18,7 @@ def agent_answer(request_data: AgentRequestPostSchema):
             prompt=request_data.prompt,
             model=request_data.model,
             tools_config=request_data.tools,
-            user_id = request_data.user_id
+            user_id=request_data.user_id,
         )
 
         result = answer_service.get_agent_answer(user_input=request_data.user_input)
