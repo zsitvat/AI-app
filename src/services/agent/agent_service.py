@@ -1,9 +1,9 @@
 from langchain import hub
 from langgraph.prebuilt import ToolNode
 from langgraph.graph import END, START, StateGraph, MessagesState
-from langgraph.checkpoint.memory import MemorySaver
 from langchain_core.messages import ToolMessage
 from langchain_core.documents import Document
+from langchain_core.messages.utils import get_buffer_string
 
 import logging
 from typing import Literal
@@ -13,14 +13,16 @@ from utils.model_selector import get_model
 from schemas.model_schema import ModelSchema
 from schemas.tool_schema import Tool
 from .tools_config import AVAILABLE_TOOLS
+from .in_memory_history import InMemoryHistory
 
 
 class AgentService:
     """Service to get answer from the model and tools"""
 
-    def __init__(self, prompt: str, model: ModelSchema, tools_config: list[Tool]):
+    def __init__(self, prompt: str, model: ModelSchema, tools_config: list[Tool], user_id:str):
         self.prompt = prompt
         self.model = model
+        self.user_id  = user_id
         self.tools_config = tools_config
         self.tools = self.get_tools()
 
@@ -48,6 +50,10 @@ class AgentService:
                     }
                 },
             )["messages"][-1].content
+
+            history = InMemoryHistory()
+            history.add_user_message(user_id=self.user_id, message=user_input)
+            history.add_ai_message(user_id=self.user_id, message=result)
 
             logging.getLogger("logger").debug(f"Agent answer received {result}")
 
@@ -110,10 +116,13 @@ class AgentService:
 
         chain = prompt | llm
 
+        chat_history = get_buffer_string(InMemoryHistory().get_messages(user_id = self.user_id))
+
         answer = chain.invoke(
             {
                 "question": user_input,
                 "documents": " ".join(doc + "\n\n" for doc in documents),
+                "chat_history": chat_history,
             }
         )
 
@@ -153,4 +162,4 @@ class AgentService:
 
         workflow.add_edge("tools", "agent")
 
-        return workflow.compile(MemorySaver())
+        return workflow.compile()

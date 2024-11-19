@@ -4,7 +4,7 @@ import logging
 
 
 from schemas.agent_request_post_schema import AgentRequestPostSchema
-from services.answer.agent_service import AgentService
+from services.agent.agent_service import AgentService
 
 router = APIRouter()
 
@@ -18,6 +18,7 @@ def agent_answer(request_data: AgentRequestPostSchema):
             prompt=request_data.prompt,
             model=request_data.model,
             tools_config=request_data.tools,
+            user_id = request_data.user_id
         )
 
         result = answer_service.get_agent_answer(user_input=request_data.user_input)
