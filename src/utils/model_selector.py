@@ -9,8 +9,6 @@ from langchain_openai import (
     OpenAIEmbeddings,
     AzureOpenAIEmbeddings,
 )
-from langchain_core.language_models.base import BaseLanguageModel
-from langchain_core.embeddings import Embeddings
 from langchain_anthropic import ChatAnthropic
 from langchain_aws import ChatBedrock
 
@@ -26,6 +24,18 @@ def get_model(
     type: str = "completions",
     temperature: float = 0,
 ):
+    """Get the model based on the provider and the type of the model
+
+    Args:
+        provider (str): The provider of the model
+        deployment (str | None, optional): The deployment of the model. Defaults to None.
+        model (str, optional): The model name. Defaults to "gpt-4o-mini".
+        type (str, optional): The type of the model. Defaults to "completions".
+        temperature (float, optional): The temperature of the model. Defaults to 0.
+
+    Returns:
+        OpenAI | AzureOpenAI | ChatOpenAI | AzureChatOpenAI | ChatAnthropic | ChatBedrock modell class
+    """
 
     if type == "completions":
         if provider == "openai":

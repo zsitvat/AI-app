@@ -1,29 +1,44 @@
-from fastapi import APIRouter, HTTPException
-from fastapi.responses import JSONResponse
+from fastapi import APIRouter, HTTPException, Depends
 import logging
 
 
 from schemas.agent_request_post_schema import AgentRequestPostSchema
+from schemas.response_schema import AgentAnswerResponseSchema
 from services.agent.agent_service import AgentService
 
 router = APIRouter()
 
 
-@router.post("/api/agent/answer")
-def agent_answer(request_data: AgentRequestPostSchema):
+def get_agent_service(request: AgentRequestPostSchema):
+    return AgentService(
+        prompt=request.prompt,
+        model=request.model,
+        tools_config=request.tools,
+        user_id=request.user_id,
+    )
+
+
+@router.post("/api/agent/answer", response_model=AgentAnswerResponseSchema)
+def agent_answer(
+    request: AgentRequestPostSchema,
+    agent_service: AgentService = Depends(get_agent_service),
+):
+    """
+    Get an answer from the agent model.
+
+    Args:
+        request (AgentRequestPostSchema): Request body
+        agent_service (AgentService): Agent service instance
+
+    Returns:
+            AgentAnswerResponseSchema
+    """
 
     try:
 
-        answer_service = AgentService(
-            prompt=request_data.prompt,
-            model=request_data.model,
-            tools_config=request_data.tools,
-            user_id=request_data.user_id,
-        )
+        result = agent_service.get_agent_answer(user_input=request.user_input)
 
-        result = answer_service.get_agent_answer(user_input=request_data.user_input)
-
-        return JSONResponse(content={"answer": result}, status_code=200)
+        return {"answer": result}
 
     except Exception as ex:
         logging.getLogger("logger").error(f"Error in agent answer route: {str(ex)}")

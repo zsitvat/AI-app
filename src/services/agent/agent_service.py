@@ -65,7 +65,7 @@ class AgentService:
             logging.getLogger("logger").error(f"Error while getting agent answer: {ex}")
             raise ex
 
-    def get_tools(self):
+    def get_tools(self) -> list:
         """Get the tools from the tools config"""
 
         model_tools = []
@@ -149,7 +149,7 @@ class AgentService:
 
         return next_node
 
-    def _get_workflow(self):
+    def _get_workflow(self) -> StateGraph:
         """Get the workflow for the agent service"""
 
         workflow = StateGraph(MessagesState)

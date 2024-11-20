@@ -1,21 +1,36 @@
-from fastapi import APIRouter, HTTPException
-from fastapi.responses import JSONResponse
+from fastapi import APIRouter, HTTPException, Depends
 import logging
 
 from services.vector_db.vector_db_service import VectorDb
 from schemas.vector_db_post_schema import VectorDbPostSchema
+from schemas.response_schema import VectorDbResponseSchema
 
 router = APIRouter()
 
 
-@router.post("/api/vector_db/create")
-def create_vector_db(request: VectorDbPostSchema):
-    """Create a vector database route"""
+def get_vector_db_service():
+    return VectorDb()
+
+
+@router.post("/api/vector_db/create", response_model=VectorDbResponseSchema)
+def create_vector_db(
+    request: VectorDbPostSchema,
+    vector_db_service: VectorDb = Depends(get_vector_db_service),
+):
+    """Create a vector database from a given file.
+
+    Args:
+        request (VectorDbPostSchema): Request body
+        vector_db_service (VectorDb): VectorDb service instance
+
+    Returns:
+            VectorDbResponseSchema
+    """
 
     try:
 
         if request.db_type == "deeplake":
-            return VectorDb().create_vector_db_deeplake(
+            response = vector_db_service.create_vector_db_deeplake(
                 db_path=request.db_path,
                 chunk_size=request.chunk_size,
                 chunk_overlap=request.chunk_overlap,
@@ -25,6 +40,8 @@ def create_vector_db(request: VectorDbPostSchema):
                 encoding=request.file_load_encoding,
                 sheet_name=request.sheet_name,
             )
+
+            return {"response": response}
         else:
             raise HTTPException(
                 status_code=400, detail="Vector database type is not supported!"
