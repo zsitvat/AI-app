@@ -10,6 +10,7 @@
   - run.sh indításával használható az alkalmazás
   - dockerrel is futtatható:
       - sudo docker build -t <docker_name>
+      - docker run -d -p 5000:5000 --name <container_name> <docker_name>
   - unit tesztek futtatása - python -m pytest
   - **Vektor adatbázist létre kell hozni a dokumentum alapú tool használatához !**
 
