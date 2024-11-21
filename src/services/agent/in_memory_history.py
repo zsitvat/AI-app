@@ -1,24 +1,30 @@
 from langchain_community.chat_message_histories import ChatMessageHistory
 from langchain_core.chat_history import BaseChatMessageHistory
 
+import schedule
+from threading import Thread
+from datetime import datetime
+
+from config import Config
+
 store = {}
 
 
 class InMemoryHistory:
     """
-    A class to manage in-memory chat history for different sessions.
+    A class to manage in-memory chat history for different users.
     """
 
     def get_history(self, user_id: str) -> BaseChatMessageHistory:
         """
-        Retrieve the chat history for a given session.
+        Retrieve the chat history for a given user.
         If the history does not exist, create a new one.
 
         Args:
-            user_id (str): The unique identifier for the session.
+            user_id (str): The unique identifier for the user.
 
         Returns:
-            BaseChatMessageHistory: The chat history associated with the session.
+            BaseChatMessageHistory: The chat history associated with the user.
         """
         if user_id not in store:
             store[user_id] = ChatMessageHistory()
@@ -26,10 +32,10 @@ class InMemoryHistory:
 
     def get_messages(self, user_id: str) -> list:
         """
-        Retrieve all messages for a given session.
+        Retrieve all messages for a given user.
 
         Args:
-            user_id (str): The unique identifier for the session.
+            user_id (str): The unique identifier for the user.
 
         Returns:
             list[str]: A list of messages.
@@ -39,10 +45,10 @@ class InMemoryHistory:
 
     def add_message(self, user_id: str, message: str) -> None:
         """
-        Add a generic message to the chat history for a given session.
+        Add a generic message to the chat history for a given user.
 
         Args:
-            user_id (str): The unique identifier for the session.
+            user_id (str): The unique identifier for the user.
             message (str): The message to add.
         """
         history = self.get_history(user_id)
@@ -50,10 +56,10 @@ class InMemoryHistory:
 
     def add_ai_message(self, user_id: str, message: str) -> None:
         """
-        Add an AI-generated message to the chat history for a given session.
+        Add an AI-generated message to the chat history for a given user.
 
         Args:
-            user_id (str): The unique identifier for the session.
+            user_id (str): The unique identifier for the user.
             message (str): The AI message to add.
         """
         history = self.get_history(user_id)
@@ -61,30 +67,56 @@ class InMemoryHistory:
 
     def add_user_message(self, user_id: str, message: str) -> None:
         """
-        Add a user-generated message to the chat history for a given session.
+        Add a user-generated message to the chat history for a given user.
 
         Args:
-            user_id (str): The unique identifier for the session.
+            user_id (str): The unique identifier for the user.
             message (str): The user message to add.
         """
         history = self.get_history(user_id)
         history.add_user_message(message)
 
-    def clear_history(user_id: str) -> None:
+    def clear_history(self, user_id: str) -> None:
         """
-        Clear the chat history for a specific session.
+        Clear the chat history for a specific user.
 
         Args:
-            user_id (str): The unique identifier for the session.
+            user_id (str): The unique identifier for the user.
         """
         if user_id in store:
             del store[user_id]
 
-    def get_all_sessions() -> dict[str, BaseChatMessageHistory]:
+    def clear_full_history(self) -> None:
         """
-        Retrieve all session histories.
+        Clear the chat history for a specific user.
+
+        Args:
+            user_id (str): The unique identifier for the user.
+        """
+        global store
+        store = {}
+
+    def get_all_histories(self) -> dict[str, BaseChatMessageHistory]:
+        """
+        Retrieve all histories.
 
         Returns:
-            Dict[str, BaseChatMessageHistory]: A dictionary of all session histories.
+            Dict[str, BaseChatMessageHistory]: A dictionary of all user histories.
         """
         return store
+
+
+def run_scheduler(history_manager: InMemoryHistory):
+    """
+    Start a scheduler to clear all chat histories periodically.
+    """
+
+    time = Config.HISTORY_CLEAR_SCHEDULE_IN_MINUTE
+
+    schedule.every(time).minute.do(history_manager.clear_full_history)
+
+    def run_schedule():
+        while True:
+            schedule.run_pending()
+
+    Thread(target=run_schedule, daemon=True).start()

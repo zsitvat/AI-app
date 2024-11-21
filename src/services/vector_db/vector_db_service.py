@@ -42,12 +42,11 @@ class VectorDb:
             provider=model.provider,
             deployment=model.deployment,
             model=model.name,
-            type=model.type,
-            temperature=model.temperature,
+            type="embedding"
         )
 
         if not isinstance(embeddings_model, Embeddings):
-            raise TypeError("The model returned is not of type 'Embeddings'")
+            raise TypeError("The model is not of type 'Embeddings'")
 
         try:
 

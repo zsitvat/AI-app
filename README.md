@@ -1,5 +1,8 @@
 # AI-app
 
+ - AI Langchain alapú alkalmazás, amely keresni tud a neten vagy dokumentum alapján vektor adatbázis segítségével válaszolni, mely adatbázist létre is tudna hozni.
+ - Mivel ez egy teszt alkalmazás, tudás felmérésre, ezért olyan technológiát igyekeztem választani, amivel nem kell egész környezetet fellállítani az alkalmazás futtatásához. Ezért esett a választás a DeepLake vektor adatbázisra és inmemory chat history-ra. Ezek helyett mondjuk egy webszerverre kitéve adatbázisnak Redis-t használtam volna, mint chat history és vektor adatbázisnak egyaránt.
+
 ## Használat
 
   - .env-be be kell állítani a különböző kulcsokat.
@@ -28,7 +31,7 @@
       - `vector_db_path` (string): A vektor adatbázis elérési útja.
       - `required` (bool): Az eszköz szükségessége.
       - `model` (object): Az eszköz modell konfigurációja.
-        - `model_name` (string): A modell neve.
+        - `name` (string): A modell neve.
         - `type` (string): A modell típusa.
         - `deployment` (string|null): A modell telepítése.
         - `provider` (string): A szolgáltató neve.
@@ -56,7 +59,7 @@
       "name": "retriver_tool",
       "vector_db_path": "deeplake_databases/deeplake_db_pdf",
       "model": {
-        "model_name": "text-embedding-3-large",
+        "name": "text-embedding-3-large",
         "type": "embedding",
         "deployment": null,
         "provider": "openai"
@@ -92,7 +95,10 @@
     - `chunk_overlap` (int): Az átfedés a darabok között.
     - `overwrite` (bool): Felülírja-e a meglévő adatbázist.
     - `documents` (list): Az adatbázishoz hozzáadandó dokumentumok.
-    - `model` (string): A használni kívánt modell.
+     - `model` (object): Az embedding modell konfigurációja.
+        - `name` (string): A modell neve.
+        - `deployment` (string|null): A modell telepítése.
+        - `provider` (string): A szolgáltató neve.
     - `file_load_encoding` (string): A betöltendő fájl kódolása.
     - `sheet_name` (string): A lap neve (ha alkalmazható).
 - **Válaszok:**
@@ -102,17 +108,17 @@
 
 ```json
 {
-  "db_path": "deeplake_databases/deeplake_db_docx",
+  "db_path": "deeplake_databases/deeplake_db_pdf",
   "db_type": "deeplake",
   "documents": [
-    "files/cv.docx"
+    "files/file.pdf"
   ],
   "sheet_name":"pharagraph-dataset",
   "chunk_size": 3000,
   "chunk_overlap": 200,
   "overwrite": true,
   "model": {
-    "model_name": "text-embedding-3-large",
+    "name": "text-embedding-3-large",
     "provider": "openai"
   }
 }

@@ -13,4 +13,9 @@ class VectorDbPostSchema(BaseModel):
     chunk_size: int = 2000
     chunk_overlap: int = 100
     documents: list[str]
-    model: ModelSchema
+    model: ModelSchema = ModelSchema(
+        name="text-embedding-3-small",
+        type="embedding",
+        provider="openai",
+        temperature=0,
+    )

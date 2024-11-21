@@ -119,7 +119,7 @@ class AgentService:
         chain = prompt | llm
 
         chat_history = get_buffer_string(
-            InMemoryHistory().get_messages(user_id=self.user_id)
+           InMemoryHistory().get_messages(user_id=self.user_id)
         )
 
         answer = chain.invoke(
