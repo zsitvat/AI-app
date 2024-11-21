@@ -47,7 +47,7 @@
 ```json
 {
   "prompt": "kérdés",
-  "user_input": "Hogy vagy",
+  "user_input": "Mit tudsz a wifiről?",
   "model": {
     "name": "gpt-4o-mini",
     "type": "chat",
