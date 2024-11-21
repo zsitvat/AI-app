@@ -11,6 +11,7 @@
   - dockerrel is futtatható:
       - sudo docker build -t <docker_name>
   - unit tesztek futtatása - python -m pytest
+  - **Vektor adatbázist létre kell hozni a dokumentum alapú tool használatához !**
 
 ## API Végpontok
 
