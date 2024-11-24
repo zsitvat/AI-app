@@ -13,7 +13,7 @@ def get_vector_db_service():
 
 
 @router.post("/api/vector_db/create", response_model=VectorDbResponseSchema)
-def create_vector_db(
+async def create_vector_db(
     request: VectorDbPostSchema,
     vector_db_service: VectorDb = Depends(get_vector_db_service),
 ):
@@ -30,7 +30,7 @@ def create_vector_db(
     try:
 
         if request.db_type == "deeplake":
-            response = vector_db_service.create_vector_db_deeplake(
+            response = await vector_db_service.create_vector_db_deeplake(
                 db_path=request.db_path,
                 chunk_size=request.chunk_size,
                 chunk_overlap=request.chunk_overlap,

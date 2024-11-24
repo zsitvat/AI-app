@@ -1,6 +1,7 @@
 from langchain_community.vectorstores import DeepLake
 from langchain_core.embeddings import Embeddings
 import logging
+import asyncio
 
 
 from schemas.model_schema import ModelSchema
@@ -11,7 +12,7 @@ from utils.model_selector import get_model
 class VectorDb:
     """VectorDb class to create a vector database"""
 
-    def create_vector_db_deeplake(
+    async def create_vector_db_deeplake(
         self,
         db_path: str,
         chunk_size: int,
@@ -52,19 +53,24 @@ class VectorDb:
 
             docs_for_vector_db = []
 
-            for doc in documents:
-                docs_for_vector_db.extend(
-                    FileLoaderAndsplitter().load_and_split_file(
-                        file_path=doc,
-                        text_splitter_name="recursive",
-                        chunk_size=chunk_size,
-                        chunk_overlap=chunk_overlap,
-                        encoding=encoding,
-                        sheet_name=sheet_name,
-                    )
+            tasks = [
+                FileLoaderAndsplitter().load_and_split_file(
+                    file_path=doc,
+                    text_splitter_name="recursive",
+                    chunk_size=chunk_size,
+                    chunk_overlap=chunk_overlap,
+                    encoding=encoding,
+                    sheet_name=sheet_name,
                 )
+                for doc in documents
+            ]
 
-            DeepLake.from_documents(
+            results = await asyncio.gather(*tasks)
+
+            for result in results:
+                docs_for_vector_db.extend(result)
+                
+            await DeepLake.afrom_documents(
                 documents=docs_for_vector_db,
                 embedding=embeddings_model,
                 overwrite=overwrite,

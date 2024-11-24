@@ -15,7 +15,7 @@ class InMemoryHistory:
     A class to manage in-memory chat history for different users.
     """
 
-    def get_history(self, user_id: str) -> BaseChatMessageHistory:
+    async def get_history(self, user_id: str) -> BaseChatMessageHistory:
         """
         Retrieve the chat history for a given user.
         If the history does not exist, create a new one.
@@ -30,7 +30,7 @@ class InMemoryHistory:
             store[user_id] = ChatMessageHistory()
         return store[user_id]
 
-    def get_messages(self, user_id: str) -> list:
+    async def get_messages(self, user_id: str) -> list:
         """
         Retrieve all messages for a given user.
 
@@ -40,10 +40,10 @@ class InMemoryHistory:
         Returns:
             list[str]: A list of messages.
         """
-        history = self.get_history(user_id)
+        history = await self.get_history(user_id)
         return history.messages
 
-    def add_message(self, user_id: str, message: str) -> None:
+    async def add_message(self, user_id: str, message: str) -> None:
         """
         Add a generic message to the chat history for a given user.
 
@@ -51,10 +51,10 @@ class InMemoryHistory:
             user_id (str): The unique identifier for the user.
             message (str): The message to add.
         """
-        history = self.get_history(user_id)
+        history = await self.get_history(user_id)
         history.add_message(message)
 
-    def add_ai_message(self, user_id: str, message: str) -> None:
+    async def add_ai_message(self, user_id: str, message: str) -> None:
         """
         Add an AI-generated message to the chat history for a given user.
 
@@ -62,10 +62,10 @@ class InMemoryHistory:
             user_id (str): The unique identifier for the user.
             message (str): The AI message to add.
         """
-        history = self.get_history(user_id)
+        history = await self.get_history(user_id)
         history.add_ai_message(message)
 
-    def add_user_message(self, user_id: str, message: str) -> None:
+    async def add_user_message(self, user_id: str, message: str) -> None:
         """
         Add a user-generated message to the chat history for a given user.
 
@@ -73,10 +73,10 @@ class InMemoryHistory:
             user_id (str): The unique identifier for the user.
             message (str): The user message to add.
         """
-        history = self.get_history(user_id)
+        history = await self.get_history(user_id)
         history.add_user_message(message)
 
-    def clear_history(self, user_id: str) -> None:
+    async def clear_history(self, user_id: str) -> None:
         """
         Clear the chat history for a specific user.
 
@@ -84,9 +84,9 @@ class InMemoryHistory:
             user_id (str): The unique identifier for the user.
         """
         if user_id in store:
-            del store[user_id]
+             del store[user_id]
 
-    def clear_full_history(self) -> None:
+    async def clear_full_history(self) -> None:
         """
         Clear the chat history for a specific user.
 
@@ -96,7 +96,7 @@ class InMemoryHistory:
         global store
         store = {}
 
-    def get_all_histories(self) -> dict[str, BaseChatMessageHistory]:
+    async def get_all_histories(self) -> dict[str, BaseChatMessageHistory]:
         """
         Retrieve all histories.
 
@@ -106,14 +106,14 @@ class InMemoryHistory:
         return store
 
 
-def run_scheduler(history_manager: InMemoryHistory):
+async def run_scheduler(history_manager: InMemoryHistory):
     """
     Start a scheduler to clear all chat histories periodically.
     """
 
     time = Config.HISTORY_CLEAR_SCHEDULE_IN_MINUTE
 
-    schedule.every(time).minute.do(history_manager.clear_full_history)
+    schedule.every(time).minute.do(await history_manager.clear_full_history)
 
     def run_schedule():
         while True:

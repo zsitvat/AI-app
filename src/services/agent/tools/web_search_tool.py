@@ -8,7 +8,7 @@ from schemas.tool_schema import WebSearchTool
 
 
 @tool
-def web_search_tool(config: RunnableConfig, user_input: str) -> list | str:
+async def web_search_tool(config: RunnableConfig, user_input: str) -> list | str:
     """
     Web search tool is used to search the web for information
 
@@ -32,7 +32,7 @@ def web_search_tool(config: RunnableConfig, user_input: str) -> list | str:
 
         search = SerpAPIWrapper(params={"engine": tool_config.engine})
 
-        search_results = search.run(user_input)
+        search_results = await search.arun(user_input)
 
         return search_results
 

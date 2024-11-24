@@ -9,48 +9,49 @@ from langchain.text_splitter import (
     RecursiveCharacterTextSplitter,
 )
 import os
+import aiofiles.os as aos
 import logging
 
 
 class FileLoaderAndsplitter:
     """FileLoaderAndsplitter class to load and split files"""
 
-    def _txt_loader_and_splitting(
+    async def _txt_loader_and_splitting(
         self, file_path: str, text_splitter, encoding: str = "utf-8"
     ) -> list:
         """Return the splitted documents from the txt file path."""
 
         loader = TextLoader(file_path, encoding=encoding)
-        documents = loader.load()
+        documents = await loader.aload()
 
-        return text_splitter.split_documents(documents)
+        return await text_splitter.split_documents(documents)
 
-    def _pdf_loader_and_splitting(self, file_path: str, text_splitter) -> list:
+    async def _pdf_loader_and_splitting(self, file_path: str, text_splitter) -> list:
         """Return the splitted documents from the pdf file path."""
 
         loader = PyPDFLoader(file_path)
-        documents = loader.load()
+        documents = await loader.aload()
 
         return text_splitter.split_documents(documents)
 
-    def _docx_loader_and_splitting(self, file_path: str, text_splitter) -> list:
+    async def _docx_loader_and_splitting(self, file_path: str, text_splitter) -> list:
         """Return the splitted documents from the docx file path."""
 
         loader = Docx2txtLoader(file_path)
-        documents = loader.load()
+        documents = await loader.aload()
 
-        return text_splitter.split_documents(documents)
+        return await text_splitter.split_documents(documents)
 
-    def _xlsx_loader_and_splitting(
+    async def _xlsx_loader_and_splitting(
         self, file_path: str, text_splitter, sheet_name: str | None = None
     ) -> list:
         """Return the splitted documents from the excel file path."""
 
         if sheet_name != None:
             loader = UnstructuredExcelLoader(file_path, mode="elements")
-            documents = loader.load()
+            documents = await loader.aload()
 
-            return text_splitter.split_documents(documents)
+            return await text_splitter.split_documents(documents)
         else:
             raise Exception("Sheet name is not provided!")
 
@@ -74,7 +75,7 @@ class FileLoaderAndsplitter:
 
         return text_splitter
 
-    def load_and_split_file(
+    async def load_and_split_file(
         self,
         file_path: str,
         text_splitter_name: str,
@@ -102,23 +103,23 @@ class FileLoaderAndsplitter:
             text_splitter_name, chunk_size, chunk_overlap
         )
 
-        if os.path.exists(file_path):
+        if await aos.path.exists(file_path):
 
-            extension = os.path.splitext(file_path)[1]
+            extension = os.path.splitext(file_path)[1].strip()
 
             if extension == ".pdf":
-                return self._pdf_loader_and_splitting(file_path, text_splitter)
+                return await self._pdf_loader_and_splitting(file_path, text_splitter)
 
             elif extension == ".docx" or extension == ".doc":
-                return self._docx_loader_and_splitting(file_path, text_splitter)
+                return await self._docx_loader_and_splitting(file_path, text_splitter)
 
-            elif extension == "xlsx":
-                return self._xlsx_loader_and_splitting(
+            elif extension == ".xlsx":
+                return await self._xlsx_loader_and_splitting(
                     file_path, text_splitter, sheet_name
                 )
 
             elif extension == ".txt":
-                return self._txt_loader_and_splitting(
+                return await self._txt_loader_and_splitting(
                     file_path, text_splitter, encoding=encoding
                 )
 

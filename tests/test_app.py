@@ -4,17 +4,17 @@ from fastapi.testclient import TestClient
 from src.app import create_app
 
 
-def test_create_app():
+async def test_create_app():
     """
     Test that the FastAPI application initializes correctly.
     """
     app = create_app()
     client = TestClient(app)
-    response = client.get("/")
+    response = await client.get("/")
     assert response.status_code in [200, 404]
 
 
-def test_routers():
+async def test_routers():
     """
     Test that the routers are included in the app.
     """

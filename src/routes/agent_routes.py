@@ -19,7 +19,7 @@ def get_agent_service(request: AgentRequestPostSchema):
 
 
 @router.post("/api/agent/answer", response_model=AgentAnswerResponseSchema)
-def agent_answer(
+async def agent_answer(
     request: AgentRequestPostSchema,
     agent_service: AgentService = Depends(get_agent_service),
 ):
@@ -36,7 +36,7 @@ def agent_answer(
 
     try:
 
-        result = agent_service.get_agent_answer(user_input=request.user_input)
+        result = await agent_service.get_agent_answer(user_input=request.user_input)
 
         return {"answer": result}
 

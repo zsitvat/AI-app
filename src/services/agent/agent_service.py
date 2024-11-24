@@ -28,7 +28,7 @@ class AgentService:
         self.tools_config = tools_config
         self.tools = self.get_tools()
 
-    def get_agent_answer(self, user_input: str) -> str:
+    async def get_agent_answer(self, user_input: str) -> str:
         """Run the chain to get answer the user input based on the model and tools
 
         Args:
@@ -41,9 +41,9 @@ class AgentService:
 
         try:
 
-            workflow = self._get_workflow()
+            workflow = await self._get_workflow()
 
-            result = workflow.invoke(
+            result = await workflow.ainvoke(
                 {"messages": [user_input]},
                 config={
                     "configurable": {
@@ -97,7 +97,7 @@ class AgentService:
                             documents.append(doc)
         return documents
 
-    def _call_model(self, state: MessagesState):
+    async def _call_model(self, state: MessagesState):
         """Call the model to get the answer"""
 
         messages = state["messages"]
@@ -114,7 +114,7 @@ class AgentService:
 
         llm = llm.bind_tools(self.tools, tool_choice="auto") if self.tools else llm
 
-        prompt = hub.pull(self.prompt)
+        prompt = await hub.pull(self.prompt)
 
         chain = prompt | llm
 
@@ -122,7 +122,7 @@ class AgentService:
            InMemoryHistory().get_messages(user_id=self.user_id)
         )
 
-        answer = chain.invoke(
+        answer = await chain.ainvoke(
             {
                 "question": user_input,
                 "documents": " ".join(doc + "\n\n" for doc in documents),
@@ -149,7 +149,7 @@ class AgentService:
 
         return next_node
 
-    def _get_workflow(self) -> StateGraph:
+    async def _get_workflow(self) -> StateGraph:
         """Get the workflow for the agent service"""
 
         workflow = StateGraph(MessagesState)
@@ -166,4 +166,4 @@ class AgentService:
 
         workflow.add_edge("tools", "agent")
 
-        return workflow.compile()
+        return await workflow.compile()

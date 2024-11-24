@@ -4,6 +4,8 @@
 
  - Mivel ez egy teszt alkalmazás, tudás felmérésre, ezért olyan technológiát igyekeztem választani, amivel nem kell egész környezetet fellállítani az alkalmazás futtatásához. Ezért esett a választás a DeepLake vektor adatbázisra és inmemory chat history-ra. Ezek helyett mondjuk egy webszerverre kitéve éles használatba adatbázisnak Redis-t használtam volna, mint chat history és vektor adatbázisnak egyaránt.
 
+ - Async verzió külön branchen
+
 ## Használat
 
   - .env-be be kell állítani a különböző kulcsokat.

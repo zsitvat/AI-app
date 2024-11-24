@@ -10,7 +10,7 @@ from schemas.tool_schema import RetriverTool
 
 
 @tool
-def retriver_tool(config: RunnableConfig, user_input: str) -> list:
+async def retriver_tool(config: RunnableConfig, user_input: str) -> list:
     """
     Web search tool used to search the web for information.
 
@@ -53,7 +53,7 @@ def retriver_tool(config: RunnableConfig, user_input: str) -> list:
             threshold=tool_config.search_kwargs.threshold,
         )
 
-        docs = retriver.invoke(user_input)
+        docs = await retriver.ainvoke(user_input)
 
         return [doc.page_content for doc in docs]
 

@@ -4,11 +4,11 @@ import logging
 from io import StringIO
 
 
-def test_logger_service_output():
+async def test_logger_service_output():
     log_output = StringIO()
     handler = logging.StreamHandler(log_output)
     logger_service = LoggerService()
-    logger = logger_service.setup_logger("DEBUG")
+    logger = await logger_service.setup_logger("DEBUG")
     logger.addHandler(handler)
 
     logger.debug("test")

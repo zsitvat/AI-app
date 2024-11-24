@@ -2,12 +2,12 @@ from fastapi.testclient import TestClient
 from src.app import create_app
 
 
-def test_agent_route_responds():
+async def test_agent_route_responds():
     """
     Test that the agent route responds with a valid status.
     """
 
-    client = TestClient(create_app())
+    client = await TestClient(create_app())
 
     json = {
         "prompt": "question",
@@ -32,6 +32,6 @@ def test_agent_route_responds():
         ],
     }
 
-    response = client.post("api/agent/answer", json=json)
+    response = await client.post("api/agent/answer", json=json)
     assert response.status_code == 200
     assert "answer" in response.json()
