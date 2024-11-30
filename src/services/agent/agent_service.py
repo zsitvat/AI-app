@@ -4,13 +4,14 @@ from langgraph.graph import END, START, StateGraph, MessagesState
 from langchain_core.messages import ToolMessage
 from langchain_core.documents import Document
 from langchain_core.messages.utils import get_buffer_string
+from langchain_core.language_models import BaseLanguageModel
 
 import logging
 from typing import Literal
 from uuid import uuid4
+from typing import Callable, Any
 
-from utils.model_selector import get_model
-from schemas.model_schema import ModelSchema
+from utils.model_selector import get_conversation_model
 from schemas.tool_schema import Tool
 from .tools_config import AVAILABLE_TOOLS
 from .in_memory_history import InMemoryHistory
@@ -20,13 +21,18 @@ class AgentService:
     """Service to get answer from the model and tools"""
 
     def __init__(
-        self, prompt: str, model: ModelSchema, tools_config: list[Tool], user_id: str
+        self,
+        prompt: str,
+        model:  BaseLanguageModel,
+        tools_config: list[Tool],
+        user_id: str,
     ):
         self.prompt = prompt
         self.model = model
         self.user_id = user_id
         self.tools_config = tools_config
-        self.tools = self.get_tools()
+        self.tools = self._get_tools()
+        self.model = model
 
     def get_agent_answer(self, user_input: str) -> str:
         """Run the chain to get answer the user input based on the model and tools
@@ -65,7 +71,7 @@ class AgentService:
             logging.getLogger("logger").error(f"Error while getting agent answer: {ex}")
             raise ex
 
-    def get_tools(self) -> list:
+    def _get_tools(self) -> list:
         """Get the tools from the tools config"""
 
         model_tools = []
@@ -104,13 +110,7 @@ class AgentService:
         user_input = messages[0].content
         documents = self._get_documents_form_messages(messages)
 
-        llm = get_model(
-            model=self.model.name,
-            deployment=self.model.deployment,
-            provider=self.model.provider,
-            type=self.model.type,
-            temperature=self.model.temperature,
-        )
+        llm = self.model
 
         llm = llm.bind_tools(self.tools, tool_choice="auto") if self.tools else llm
 
@@ -119,7 +119,7 @@ class AgentService:
         chain = prompt | llm
 
         chat_history = get_buffer_string(
-           InMemoryHistory().get_messages(user_id=self.user_id)
+            InMemoryHistory().get_messages(user_id=self.user_id)
         )
 
         answer = chain.invoke(

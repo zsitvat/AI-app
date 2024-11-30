@@ -3,9 +3,7 @@ from langchain_core.embeddings import Embeddings
 import logging
 
 
-from schemas.model_schema import ModelSchema
 from services.file_loader.file_loader import FileLoaderAndsplitter
-from utils.model_selector import get_model
 
 
 class VectorDb:
@@ -18,7 +16,7 @@ class VectorDb:
         chunk_overlap: int,
         overwrite: bool,
         documents: list,
-        model: ModelSchema,
+        embeddings_model: Embeddings,
         encoding: str,
         sheet_name: str,
     ) -> str:
@@ -37,13 +35,6 @@ class VectorDb:
         """
 
         logging.getLogger("logger").debug("Creating vector database using deeplake")
-
-        embeddings_model = get_model(
-            provider=model.provider,
-            deployment=model.deployment,
-            model=model.name,
-            type="embedding"
-        )
 
         if not isinstance(embeddings_model, Embeddings):
             raise TypeError("The model is not of type 'Embeddings'")

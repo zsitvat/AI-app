@@ -5,6 +5,8 @@ from services.vector_db.vector_db_service import VectorDb
 from schemas.vector_db_post_schema import VectorDbPostSchema
 from schemas.response_schema import VectorDbResponseSchema
 
+from utils.model_selector import get_embeddings_model
+
 router = APIRouter()
 
 
@@ -36,7 +38,11 @@ def create_vector_db(
                 chunk_overlap=request.chunk_overlap,
                 overwrite=request.overwrite,
                 documents=request.documents,
-                model=request.model,
+                model=get_embeddings_model(
+                    provider=request.model.provider,
+                    model=request.model.name,
+                    type=request.model.type,
+                ),
                 encoding=request.file_load_encoding,
                 sheet_name=request.sheet_name,
             )

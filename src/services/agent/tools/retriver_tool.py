@@ -5,7 +5,7 @@ from langchain_core.runnables.config import RunnableConfig
 
 import logging
 
-from utils.model_selector import get_model
+from utils.model_selector import get_conversation_model
 from schemas.tool_schema import RetriverTool
 
 
@@ -32,7 +32,7 @@ def retriver_tool(config: RunnableConfig, user_input: str) -> list:
             None,
         )
 
-        embedding = get_model(
+        embedding = get_conversation_model(
             provider=tool_config.model.provider,
             deployment=tool_config.model.deployment,
             type="embedding",

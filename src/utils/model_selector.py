@@ -17,7 +17,34 @@ import logging
 import boto3
 
 
-def get_model(
+def get_embeddings_model(
+    provider: str,
+    model: str = "text-embedding-3-large",
+    deployment: str | None = None,
+):
+    """Get the embeddings model based on the provider
+
+    Args:
+        provider (str): The provider of the model
+        model (str, optional): The model name. Defaults to "text-embedding-3-large".
+        deployment (str | None, optional): The deployment of the model. Defaults to None.
+
+    Returns:
+        OpenAIEmbeddings | AzureOpenAIEmbeddings model class
+    """
+
+    if provider == "openai":
+        return OpenAIEmbeddings(model=model)
+    elif provider == "azure":
+        return AzureOpenAIEmbeddings(
+            azure_endpoint=os.environ.get("AZURE_BASE_URL"),
+            azure_deployment=deployment,
+        )
+    else:
+        logging.getLogger("logger").error("Wrong model provider!")
+        raise KeyError("Wrong model provider!")
+
+def get_conversation_model(
     provider: str,
     deployment: str | None = None,
     model: str = "gpt-4o-mini",
@@ -71,17 +98,6 @@ def get_model(
 
             return ChatBedrock(
                 client=client, model=model, model_kwargs=dict(temperature=temperature)
-            )
-        else:
-            logging.getLogger("logger").error("Wrong model provider!")
-            raise KeyError("Wrong model provider!")
-    elif type == "embedding":
-        if provider == "openai":
-            return OpenAIEmbeddings(model=model)
-        elif provider == "azure":
-            return AzureOpenAIEmbeddings(
-                azure_endpoint=os.environ.get("AZURE_BASE_URL"),
-                azure_deployment=deployment,
             )
         else:
             logging.getLogger("logger").error("Wrong model provider!")
